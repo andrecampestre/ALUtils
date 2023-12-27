@@ -60,22 +60,24 @@ const
 constructor TUnidacConnection.Create;
 begin
   UniConnection := TUniConnection.Create(nil);
-//  MySQLUniProvider := TMySQLUniProvider.Create(nil);
-//  OracleUniProvider := TOracleUniProvider.Create(nil);
-//  PostgreSQLUniProvider := TPostgreSQLUniProvider.Create(nil);
+
+  // Create Driver for  Multiple Databases
+  MySQLUniProvider := TMySQLUniProvider.Create(nil);
+  OracleUniProvider := TOracleUniProvider.Create(nil);
+  PostgreSQLUniProvider := TPostgreSQLUniProvider.Create(nil);
   SQLServerUniProvider := TSQLServerUniProvider.Create(nil);
-//  SQLiteUniProvider := TSQLiteUniProvider.Create(nil);
+  SQLiteUniProvider := TSQLiteUniProvider.Create(nil);
 end;
 
 destructor TUnidacConnection.Destroy;
 begin
   UniConnection.Connected := False;
   FreeAndNil(UniConnection);
-//  MySQLUniProvider.Free;
-//  OracleUniProvider.Free;
-//  PostgreSQLUniProvider.Free;
+  MySQLUniProvider.Free;
+  OracleUniProvider.Free;
+  PostgreSQLUniProvider.Free;
   SQLServerUniProvider.Free;
-//  SQLiteUniProvider.Free;
+  SQLiteUniProvider.Free;
   inherited;
 end;
 
@@ -103,12 +105,15 @@ begin
   Result.This.Password := Password;
   Result.This.Port := StrToInt(Port);
   Result.This.AutoCommit := False;
+  Result.This.Pooling := True;
   Result.This.Connected := True;
 end;
 
 initialization
+
 {$IFDEF MSWINDOWS}
   CoInitializeEx(nil, COINIT_MULTITHREADED);
 {$ENDIF}
+
 
 end.
